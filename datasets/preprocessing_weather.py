@@ -1,15 +1,17 @@
+import numpy as np
 import pandas as pd
 import sklearn as sk
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import KNNImputer
 from scipy import stats
 
-def preprocess_weather_data(path='Dataset3_Weather/Weather Training Data.csv'):
+def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Data.csv'):
     df = pd.read_csv(path)
     df.drop(columns=['row ID'], inplace=True)
 
     X_raw = df.drop("RainTomorrow", axis=1)
-    y = df["RainTomorrow"]
+    X_raw=X_raw[:20000]
+    y = df["RainTomorrow"].iloc[:20000]
 
     X_train_raw, X_test_raw, y_train, y_test = sk.model_selection.train_test_split(
         X_raw, y, test_size=0.2, random_state=42
@@ -33,6 +35,12 @@ def preprocess_weather_data(path='Dataset3_Weather/Weather Training Data.csv'):
     X_train_combined = pd.concat([X_train_num, X_train_cat], axis=1)
     X_test_combined = pd.concat([X_test_num, X_test_cat], axis=1)
 
+
+    print("Column dtypes:")
+    print(X_train_combined.dtypes)
+
+    print("\nAny non-numeric columns?")
+    print(X_train_combined.select_dtypes(exclude=[np.number]).columns)
     imputer = KNNImputer(n_neighbors=3, weights='uniform')
     X_train_imputed = imputer.fit_transform(X_train_combined)
     X_test_imputed = imputer.transform(X_test_combined)
@@ -51,4 +59,9 @@ def preprocess_weather_data(path='Dataset3_Weather/Weather Training Data.csv'):
         std = X_train_imputed_df[col].std()
         X_test_imputed_df[col] = (X_test_imputed_df[col] - mean) / std
 
-    return X_train_imputed_df, X_test_imputed_df, y_train.reset_index(drop=True), y_test.reset_index(drop=True)
+    return (
+        X_train_imputed_df.to_numpy(),
+        X_test_imputed_df.to_numpy(),
+        y_train.reset_index(drop=True).to_numpy().reshape(-1, 1),
+        y_test.reset_index(drop=True).to_numpy().reshape(-1, 1)
+    )

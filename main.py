@@ -1,3 +1,4 @@
+from datasets.preprocessing_weather import preprocess_weather_data
 from framework.my_nn import MyNN
 from framework.LLM_nn import LLM_NN
 # from framework.pytorch_nn import PyTorchNN
@@ -7,15 +8,17 @@ from training.evaluate import evaluate_model
 from datasets.debug_data import load_debug_data  # Use debug for now
 
 # Load small test data
-X_train, X_test, y_train, y_test = load_debug_data()
+X_train, X_test, y_train, y_test = preprocess_weather_data()
 
 # Model definitions (hardcoded)
+X_train_shape=X_train.shape[1]
 models = {
-    "MyNN": MyNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
-    "LLM_NN": LLM_NN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
+    "MyNN": MyNN(input_size=X_train_shape, hidden_layers=[8], output_size=1,  learning_rate=0.01),
+    #"LLM_NN": LLM_NN(input_size=X_train_shape, hidden_layers=[8], output_size=1, activation='relu', learning_rate=0.01),
     # "PyTorchNN": PyTorchNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
-    "SklearnNN": SklearnNN(input_size=4, hidden_layers=(8,), output_size=2, activation='relu', learning_rate=0.01)
+    "SklearnNN": SklearnNN(input_size=X_train_shape, hidden_layers=(8,), output_size=1, activation='relu', learning_rate=0.01)
 }
+
 
 
 # Train and evaluate all models
