@@ -2,9 +2,36 @@
 
 import numpy as np
 from tqdm import tqdm
+from dataclasses import dataclass
+
+@dataclass
+class LayerConfig:
+    """
+    Configuration for a layer in the neural network.
+    :param input_n: Number of input neurons.
+    :param output_n: Number of output neurons.
+    :param activationFunction: Activation function to use.
+    """
+    neurons: int
+    activationFunction: str
+    def __post_init__(self):
+        if self.activationFunction not in ['relu', 'sigmoid']:
+            raise ValueError("activationFunction must be 'relu' or 'sigmoid'")
+        self.activationFunction = ReLU() if self.activationFunction == 'relu' else Sigmoid()
 
 class MyNN:
-    def __init__(self, input_size, hidden_layers, output_size, activation='relu', learning_rate=0.01):
+    """
+    A simple feedforward fully connected neural network implementation.
+    """
+
+    def __init__(self, input_size: LayerConfig, hidden_layers: list[LayerConfig], output_size: LayerConfig, learning_rate=0.01):
+        """
+        Initialize the neural network.
+        :param input_size: Number of input features.
+        :param hidden_layers: List of integers representing the number of neurons in each hidden layer.
+        :param output_size: Number of output classes.
+        :param learning_rate: Learning rate for the optimizer.
+        """
         self.net = Network(input_size, hidden_layers + [output_size])
         self.learning_rate = learning_rate
         self.input_size = input_size
@@ -128,19 +155,38 @@ class Layer:
 
 
 class Network:
-    def __init__(self, input_len: int, output_len: list):
+    """
+    A simple neural network framework class to manage layers and training.
+    This class is responsible for building the network, forward propagation,
+    backward propagation, and training the network.
+    It also handles the loss calculation and weight updates.
+    """
+
+    def __init__(self, input_len: LayerConfig, output_len: list[LayerConfig]):
+        """
+        Initialize the network with input and output dimensions.
+        :param input_len: Number of input features.
+        :param output_len: List of integers representing the number of neurons in each layer.
+        """
         self.layers = []
         self.best_val_loss = float("inf")
         self.best_weights = None
         self.build_network(input_len, output_len)
 
-    def build_network(self, input_len: int, output_len: list):
+    def build_network(self, input_len: LayerConfig, output_len: list[LayerConfig]):
+        """
+        Build the network by adding layers.
+        :param input_len: Number of input features.
+        :param output_len: List of integers representing the number of neurons in each layer.
+        """
         # Add input layer
-        self.layers.append(Layer(input_len, output_len[0], ReLU()))
+        self.layers.append(Layer(input_len.neurons, output_len[0].neurons, input_len.activationFunction))
         # Add hidden layers
         for i in range(1, len(output_len)):
-            activation = ReLU() if i < len(output_len) - 1 else Sigmoid()
-            self.layers.append(Layer(output_len[i - 1], output_len[i], activation))
+            # Todo currently ReLU is used for all layers, but this can be changed
+            # to use different activation functions for different layers
+            activation = output_len[i].activationFunction
+            self.layers.append(Layer(output_len[i - 1].neurons, output_len[i].neurons, activation))
 
     def forwardPropagation(self, x):
         for layer in self.layers:
@@ -206,3 +252,4 @@ class Network:
         return losses
     
     
+LayerConfig = LayerConfig

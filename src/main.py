@@ -1,17 +1,17 @@
-from framework.my_nn import MyNN
+from framework.my_nn import MyNN, LayerConfig
 from framework.LLM_nn import LLM_NN
 # from framework.pytorch_nn import PyTorchNN
 from framework.sklearn_nn import SklearnNN
 from training.train import train_model
 from training.evaluate import evaluate_model
-from datasets.debug_data import load_debug_data  # Use debug for now
+from dataloaders.debug_data import load_debug_data  # Use debug for now
 
 # Load small test data
 X_train, X_test, y_train, y_test = load_debug_data()
 
 # Model definitions (hardcoded)
 models = {
-    "MyNN": MyNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
+    "MyNN": MyNN(input_size=LayerConfig(neurons=4, activationFunction="relu"), hidden_layers=[LayerConfig(neurons=8, activationFunction="relu")], output_size=LayerConfig(neurons=2, activationFunction="sigmoid"), learning_rate=0.01),
     #"LLM_NN": LLM_NN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
     # "PyTorchNN": PyTorchNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
     #"SklearnNN": SklearnNN(input_size=4, hidden_layers=(8,), output_size=2, activation='relu', learning_rate=0.01)
