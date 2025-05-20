@@ -1,0 +1,11 @@
+certifi==2025.1.31
+charset-normalizer==3.4.1
+idna==3.10
+kagglehub==0.3.10
+mpremote==1.25.0
+packaging==24.2
+pyserial==3.5
+PyYAML==6.0.2
+requests==2.32.3
+tqdm==4.67.1
+urllib3==2.3.0
