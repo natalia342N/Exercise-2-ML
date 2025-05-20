@@ -12,9 +12,9 @@ X_train, X_test, y_train, y_test = load_debug_data()
 # Model definitions (hardcoded)
 models = {
     "MyNN": MyNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
-    "LLM_NN": LLM_NN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
+    #"LLM_NN": LLM_NN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
     # "PyTorchNN": PyTorchNN(input_size=4, hidden_layers=[8], output_size=2, activation='relu', learning_rate=0.01),
-    "SklearnNN": SklearnNN(input_size=4, hidden_layers=(8,), output_size=2, activation='relu', learning_rate=0.01)
+    #"SklearnNN": SklearnNN(input_size=4, hidden_layers=(8,), output_size=2, activation='relu', learning_rate=0.01)
 }
 
 

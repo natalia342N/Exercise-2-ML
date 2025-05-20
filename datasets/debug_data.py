@@ -2,6 +2,9 @@ from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
 def load_debug_data(n_samples=10, n_features=4, n_classes=2):
+    """
+    Generate a small synthetic dataset for debugging purposes unsing sklearn's make_classification.
+    """
     X, y = make_classification(
         n_samples=n_samples,
         n_features=n_features,
