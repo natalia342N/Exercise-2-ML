@@ -54,9 +54,10 @@ def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Dat
         std = X_train_imputed_df[col].std()
         X_test_imputed_df[col] = (X_test_imputed_df[col] - mean) / std
 
+
     return (
         X_train_imputed_df.to_numpy(),
         X_test_imputed_df.to_numpy(),
-        y_train.reset_index(drop=True).to_numpy().reshape(-1, 1),
-        y_test.reset_index(drop=True).to_numpy().reshape(-1, 1)
+        y_train.reset_index(drop=True).to_numpy().reshape(-1),
+        y_test.reset_index(drop=True).to_numpy().reshape(-1)
     )

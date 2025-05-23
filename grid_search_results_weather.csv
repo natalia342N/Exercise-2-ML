@@ -1,0 +1,17 @@
+model,hidden_layers,learning_rate,activation,accuracy
+PyTorchNN,"(16,)",0.001,relu,0.3333333333333333
+PyTorchNN,"(16,)",0.001,tanh,0.4088888888888889
+PyTorchNN,"(16,)",0.01,relu,0.30666666666666664
+PyTorchNN,"(16,)",0.01,tanh,0.2577777777777778
+PyTorchNN,"(32,)",0.001,relu,0.36444444444444446
+PyTorchNN,"(32,)",0.001,tanh,0.5111111111111111
+PyTorchNN,"(32,)",0.01,relu,0.32
+PyTorchNN,"(32,)",0.01,tanh,0.3111111111111111
+SklearnNN,"(16,)",0.001,relu,0.29777777777777775
+SklearnNN,"(16,)",0.001,tanh,0.3422222222222222
+SklearnNN,"(16,)",0.01,relu,0.30666666666666664
+SklearnNN,"(16,)",0.01,tanh,0.3333333333333333
+SklearnNN,"(32,)",0.001,relu,0.3511111111111111
+SklearnNN,"(32,)",0.001,tanh,0.4311111111111111
+SklearnNN,"(32,)",0.01,relu,0.29777777777777775
+SklearnNN,"(32,)",0.01,tanh,0.4222222222222222

@@ -2,7 +2,8 @@ import numpy as np
 
 class LLM_NN:
     def __init__(self, input_size, hidden_layers, output_size, activation='relu', learning_rate=0.01):
-        self.layers = [input_size] + hidden_layers + [output_size]
+        self.layers = [input_size] + list(hidden_layers) + [output_size]
+
         self.activation = activation
         self.lr = learning_rate
         self.weights = []
@@ -86,10 +87,14 @@ class LLM_NN:
 
         return grads_w, grads_b
 
-    def update_params(self, grads_w, grads_b):
+    def update_params(self, grads_w, grads_b, max_norm=5.0):
         for i in range(len(self.weights)):
+            grad_norm = np.linalg.norm(grads_w[i])
+            if grad_norm > max_norm:
+                grads_w[i] = grads_w[i] * (max_norm / grad_norm)
             self.weights[i] -= self.lr * grads_w[i]
             self.biases[i] -= self.lr * grads_b[i]
+
 
     def fit(self, X, y, epochs=100, batch_size=32, verbose=False):
         for epoch in range(epochs):

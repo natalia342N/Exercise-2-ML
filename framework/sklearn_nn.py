@@ -17,7 +17,7 @@ class SklearnNN:
             learning_rate_init=learning_rate,
             max_iter=500,
             random_state=0,
-            verbose=True 
+            verbose=False 
         )
 
     def fit(self, X, y, **kwargs):
