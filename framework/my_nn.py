@@ -173,13 +173,14 @@ class Network:
 
 
 class MyNN:
-    def __init__(self, input_size, hidden_layers, output_size, learning_rate=0.01):  # Reduced default learning rate
-        self.net = Network(input_size, hidden_layers + [output_size])
+    def __init__(self, input_size, hidden_layers, output_size, learning_rate=0.01, activation='relu'):
+        self.net = Network(input_size, hidden_layers + (output_size,))
         self.learning_rate = learning_rate
         self.input_size = input_size
         self.output_size = output_size
         self.X_mean = None
         self.X_std = None
+        self.activation=activation
 
     def fit(self, X, y, epochs=100, batch_size=32, verbose=True):
         self.X_mean = np.mean(X, axis=0)
