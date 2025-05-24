@@ -37,22 +37,41 @@ class PyTorchNN:
 
     def fit(self, X, y, epochs=100, batch_size=32, verbose=False):
         self.model.train()
-        dataset = CustomDataset(X, y)
-        loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        X_tensor = torch.tensor(X, dtype=torch.float32)
+
+        if isinstance(y, np.ndarray) and y.ndim == 2 and y.shape[1] > 1:
+            y = np.argmax(y, axis=1)  # One-hot → class index
+        y_tensor = torch.tensor(y, dtype=torch.long)
+
+        losses = []  # 📌 Store epoch loss
 
         for epoch in range(epochs):
-            epoch_loss = 0.0
-            for batch_X, batch_y in loader:
+            permutation = torch.randperm(X_tensor.size()[0])
+            epoch_loss = 0
+            num_batches = 0
+
+            for i in range(0, X_tensor.size()[0], batch_size):
+                indices = permutation[i:i + batch_size]
+                batch_X = X_tensor[indices]
+                batch_y = y_tensor[indices]
+
                 self.optimizer.zero_grad()
                 outputs = self.model(batch_X)
                 loss = self.loss_fn(outputs, batch_y)
                 loss.backward()
                 self.optimizer.step()
-                epoch_loss += loss.item() * batch_X.size(0)
 
-            avg_loss = epoch_loss / len(loader.dataset)
+                epoch_loss += loss.item()
+                num_batches += 1
+
+            avg_loss = epoch_loss / num_batches
+            losses.append(avg_loss)
+
             if verbose and (epoch % 10 == 0 or epoch == epochs - 1):
-                print(f"Epoch {epoch}, Loss: {avg_loss:.4f}")
+                print(f"Epoch {epoch+1}/{epochs} - Loss: {avg_loss:.4f}")
+
+        return losses  # 📤 Return tracked losses
+
 
                 
     def predict(self, X):

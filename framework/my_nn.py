@@ -197,7 +197,7 @@ class MyNN:
         else:
             y_encoded = self._one_hot(y)
 
-        self.net.train_network(
+        losses = self.net.train_network(
             learning_rate=self.learning_rate,
             X_train=X_normalized,
             Y_train=y_encoded,
@@ -205,6 +205,8 @@ class MyNN:
             batch_size=batch_size,
             verbose=verbose
         )
+        return losses
+        
 
     def predict(self, X):
         X_normalized = (X - self.X_mean) / (self.X_std + 1e-8)

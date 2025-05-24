@@ -97,11 +97,16 @@ class LLM_NN:
 
 
     def fit(self, X, y, epochs=100, batch_size=32, verbose=False):
+        losses = []  # 📌 Track per-epoch loss
+
         for epoch in range(epochs):
             indices = np.arange(X.shape[0])
             np.random.shuffle(indices)
             X_shuffled = X[indices]
             y_shuffled = y[indices]
+
+            epoch_loss = 0
+            num_batches = 0
 
             for start in range(0, X.shape[0], batch_size):
                 end = start + batch_size
@@ -113,8 +118,16 @@ class LLM_NN:
                 grads_w, grads_b = self.backward(zs, activations, y_batch)
                 self.update_params(grads_w, grads_b)
 
+                epoch_loss += loss
+                num_batches += 1
+
+            avg_loss = epoch_loss / num_batches
+            losses.append(avg_loss)
+
             if verbose and (epoch % 10 == 0 or epoch == epochs - 1):
-                print(f"Epoch {epoch+1}/{epochs} - Loss: {loss:.4f}")
+                print(f"Epoch {epoch+1}/{epochs} - Loss: {avg_loss:.4f}")
+
+        return losses  # 📤 Return list of per-epoch losses
             
 
     def predict(self, X):

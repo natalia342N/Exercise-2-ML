@@ -1,20 +1,28 @@
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score
 
+import numpy as np
+
+
 class SklearnNN:
-    def __init__(self, input_size=None, hidden_layers=(100,), activation='relu', output_size=None, learning_rate=0.001):
+    def __init__(self, input_size, hidden_layers, output_size, activation='relu', learning_rate=0.01):
         self.model = MLPClassifier(
             hidden_layer_sizes=hidden_layers,
             activation=activation,
-            solver='adam',
             learning_rate_init=learning_rate,
-            max_iter=500,
-            random_state=0,
-            verbose=False 
+            max_iter=100,
+            batch_size=32,
+            verbose=False,
+            random_state=42
         )
+        self.loss_curve_ = None
 
     def fit(self, X, y, **kwargs):
+        if len(np.unique(y)) > 2:
+            y = y.flatten()
         self.model.fit(X, y)
+        self.loss_curve_ = self.model.loss_curve_  # ✅ save loss
+
 
     def predict(self, X):
         return self.model.predict(X)
