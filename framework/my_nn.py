@@ -1,87 +1,108 @@
 import numpy as np
 
+class Activation:
+    """
+    A class to handle activation functions and their derivatives.
+    """
+
+    def __init__(self, name):
+        self.name = name
+
+    def forward(self, x):
+        pass
+
+    def backward(self, x):
+        pass
+
+
+class Sigmoid(Activation):
+
+    def __init__(self):
+        super().__init__("sigmoid")
+
+    def forward(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def backward(self, x):
+        return self.forward(x) * (1 - self.forward(x))
+
+
+class ReLU(Activation):
+    def __init__(self):
+        super().__init__("relu")
+
+    def forward(self, x):
+        return np.maximum(0, x)
+
+    def backward(self, x):
+        return np.where(x > 0, 1, 0)
+
+class Softmax(Activation):
+    def __init__(self):
+        super().__init__("softmax")
+
+    def forward(self, x):
+        exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
+        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+    def backward(self, x):
+        return 1.0
+
+
+class Tanh(Activation):
+    def __init__(self):
+        super().__init__("tanh")
+
+    def forward(self, x):
+        return np.tanh(x)
+
+    def backward(self, x):
+        return 1.0 - np.tanh(x)**2
+
+CLASS_MAP = {
+    'relu': ReLU(),
+    'sigmoid': Sigmoid(),
+    'softmax': Softmax(),
+    'tanh': Tanh()
+}
+
 class Layer:
-    def __init__(self, input_n, output_n, activationFunction):
-        if activationFunction == "relu":
+    def __init__(self, input_n, output_n, activation_function: Activation):
+        if activation_function == "relu":
             self.weights = np.random.randn(input_n, output_n) * np.sqrt(2.0 / input_n)
         else:
             self.weights = np.random.randn(input_n, output_n) * np.sqrt(1.0 / input_n)
 
         self.biases = np.zeros((1, output_n))
-        self.activation = activationFunction
-
-    def relu(self, x):
-        return np.maximum(0, x)
-
-    def relu_derivative(self, x):
-        return np.where(x > 0, 1, 0)
-
-    def sigmoid(self, x):
-        return np.where(
-            x >= 0,
-            1 / (1 + np.exp(-x)),
-            np.exp(x) / (1 + np.exp(x))
-        )
-
-    def sigmoid_derivative(self, output):
-        return output * (1 - output)
-
-    def softmax(self, x):
-        exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
-        return exp_x / np.sum(exp_x, axis=1, keepdims=True)
-    
-    def tanh(self, x):
-        return np.tanh(x)
-
-    def tanh_derivative(self, x):
-        return 1.0 - np.tanh(x)**2
+        self.activation = activation_function
 
     def forwardPropagation(self, input_data):
         self.inputdata = input_data
         self.z = np.dot(self.inputdata, self.weights) + self.biases
-
-        if self.activation == "relu":
-            self.output = self.relu(self.z)
-        elif self.activation == "sigm":
-            self.output = self.sigmoid(self.z)
-        elif self.activation == "softmax":
-            self.output = self.softmax(self.z)
-        elif self.activation == "tanh":
-            self.output = self.tanh(self.z)
-        else:
-            raise ValueError("Unsupported activation function")
-
+        self.output = self.activation.forward(self.z)
         return self.output
 
-    def backwardPropagation(self, delta_val, learningrate):
-        if self.activation == "relu":
-            delta = delta_val * self.relu_derivative(self.output)
-        elif self.activation == "sigm":
-            delta = delta_val * self.sigmoid_derivative(self.output)
-        elif self.activation == "softmax":
-            delta = delta_val
-        elif self.activation == "tanh":
-            delta = delta_val * self.tanh_derivative(self.z)
-
+    def backwardPropagation(self, delta_val, learning_rate):
+        delta = delta_val * self.activation.backward(self.z)
         delta = np.clip(delta, -5, 5)
 
         weight_grad = np.dot(self.inputdata.T, delta)
         bias_grad = np.sum(delta, axis=0, keepdims=True)
 
-        self.weights -= learningrate * weight_grad
-        self.biases -= learningrate * bias_grad
+        self.weights -= learning_rate * weight_grad
+        self.biases -= learning_rate * bias_grad
 
         return np.dot(delta, self.weights.T)
 
     def get_weights(self):
-        return (self.weights.copy(), self.biases.copy())
+        return self.weights.copy(), self.biases.copy()
 
     def set_weights(self, weights):
         self.weights, self.biases = weights
 
 
 class Network:
-    def __init__(self, input_len, output_len, activation='relu'):
+    def __init__(self, input_len, output_len, activation: Activation = ReLU()):
         self.layers = []
         self.best_val_loss = float("inf")
         self.best_weights = None
@@ -89,6 +110,7 @@ class Network:
         self.build_network(input_len, output_len)
 
     def build_network(self, input_len, output_len):
+        # Add the hidden layers
         for i in range(len(output_len) - 1):
             self.layers.append(
                 Layer(
@@ -98,8 +120,9 @@ class Network:
                 )
             )
 
+        # Add the output layer
         output_size = output_len[-1]
-        output_activation = "sigm" if output_size == 1 else "softmax"
+        output_activation = Sigmoid() if output_size == 1 else Softmax()
         self.layers.append(
             Layer(
                 output_len[-2] if len(output_len) > 1 else input_len,
@@ -114,12 +137,32 @@ class Network:
         return x
 
     def compute_loss(self, Y, output):
+        """
+        Computes the cross-entropy loss value for the given predictions and true labels, applies clipping
+        to avoid logarithmic errors, and updates the best validation loss and weights
+        if the current loss is better.
+
+        :param Y: Ground-truth labels for the dataset. Shape and contents depend
+            on whether it's binary classification or multi-class classification.
+        :param output: Model predictions after applying the forward pass. Values are
+            clipped to avoid logarithmic instabilities.
+        :return: The computed loss value as a float.
+        :rtype: float
+        """
         epsilon = 1e-15
         output = np.clip(output, epsilon, 1 - epsilon)
 
         if output.shape[1] == 1:
+            # Binary Classification Case
+            # Assumes:
+            # - Y.shape == (N, 1) with values 0 or 1.
+            # - output.shape == (N, 1) with sigmoid probabilities.
             loss = -np.mean(Y * np.log(output) + (1 - Y) * np.log(1 - output))
         else:
+            # Multi-class Classification Case
+            # Assumes:
+            # - Y is one-hot encoded: shape (N, C)
+            # - output contains softmax probabilities: shape (N, C)
             loss = -np.sum(Y * np.log(output)) / Y.shape[0]
 
         if loss < self.best_val_loss:
@@ -131,7 +174,7 @@ class Network:
     def backwardPropagation(self, error, learning_rate):
         delta = error
         for layer in reversed(self.layers):
-            delta = layer.backwardPropagation(delta, learningrate=learning_rate)
+            delta = layer.backwardPropagation(delta, learning_rate=learning_rate)
 
     def get_all_weights(self):
         return [layer.get_weights() for layer in self.layers]
@@ -178,8 +221,8 @@ class Network:
 
 
 class MyNN:
-    def __init__(self, input_size, hidden_layers, output_size, learning_rate=0.01, activation='relu'):
-        self.net = Network(input_size, hidden_layers + (output_size,), activation=activation)
+    def __init__(self, input_size, hidden_layers, output_size, learning_rate=0.01, activation: str = "relu"):
+        self.net = Network(input_size, hidden_layers + (output_size,), activation=CLASS_MAP[activation])
         self.learning_rate = learning_rate
         self.input_size = input_size
         self.output_size = output_size
@@ -193,8 +236,12 @@ class MyNN:
         X_normalized = (X - self.X_mean) / (self.X_std + 1e-8)
 
         if self.output_size == 1:
+            # Binary Encoding
+            # Reshape to (N, 1) if needed
             y_encoded = y.reshape(-1, 1) if y.ndim == 1 else y
         else:
+            # Multiclass Encoding
+            # convert class labels into one-hot encoded vectors
             y_encoded = self._one_hot(y)
 
         self.net.train_network(
@@ -214,9 +261,9 @@ class MyNN:
         else:
             return np.argmax(output, axis=1)
 
-    def score(self, X, y):
-        preds = self.predict(X)
-        return np.mean(preds == y)
+    def score(self, x, y):
+        predictions = self.predict(x)
+        return np.mean(predictions == y)
 
     def count_parameters(self):
         return sum(w.size + b.size for w, b in self.net.get_all_weights())

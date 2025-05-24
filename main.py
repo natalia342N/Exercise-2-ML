@@ -20,6 +20,7 @@ from training.evaluate import evaluate_model
 from datasets.debug_data import load_debug_data  
 
 # pick debug, amazon review or weather dataset
+print("Loading dataset...")
 X_train, X_test, y_train, y_test = preprocess_weather_data()
 
 input_size=X_train.shape[1]
