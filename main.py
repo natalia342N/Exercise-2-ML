@@ -12,6 +12,14 @@ from framework.sklearn_nn import SklearnNN
 from training.evaluate import evaluate_model
 from training.train import train_model
 
+<<<<<<< HEAD
+=======
+# debug data
+from datasets.debug_data import load_debug_data  
+
+# pick debug, amazon review or weather dataset
+print("Loading dataset...")
+>>>>>>> f5257ede92e43dffe2a9a6b896b6eccfd8bbc5c2
 X_train, X_test, y_train, y_test = preprocess_weather_data()
 input_size = X_train.shape[1]
 output_size = len(np.unique(y_train))

@@ -6,6 +6,13 @@ from sklearn.impute import KNNImputer
 from scipy import stats
 
 def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Data.csv'):
+    """
+    Preprocesses weather data for modeling.
+    :param path: Path to the weather dataset file.
+    :return: A tuple containing processed training features, testing features,
+             training labels, and testing labels as numpy arrays.
+    :rtype: tuple of (numpy.ndarray, numpy.ndarray, numpy.ndarray, numpy.ndarray)
+    """
     df = pd.read_csv(path)
     df.drop(columns=['row ID'], inplace=True)
 
@@ -13,10 +20,12 @@ def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Dat
     X_raw=X_raw[:20000]
     y = df["RainTomorrow"].iloc[:20000]
 
+    # split into a test and a training set:
     X_train_raw, X_test_raw, y_train, y_test = sk.model_selection.train_test_split(
         X_raw, y, test_size=0.2, random_state=42
     )
 
+    # encode categorical data:
     categorical_cols = ['Location', 'RainToday', 'WindGustDir', 'WindDir3pm', 'WindDir9am']
 
     encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
@@ -42,6 +51,7 @@ def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Dat
     X_train_imputed_df = pd.DataFrame(X_train_imputed, columns=X_train_combined.columns)
     X_test_imputed_df = pd.DataFrame(X_test_imputed, columns=X_test_combined.columns)
 
+    # Normalise numerical columns:
     columns_to_normalize = [
         "MinTemp", "MaxTemp", "WindGustSpeed", "WindSpeed9am", "WindSpeed3pm",
         "Humidity9am", "Humidity3pm", "Pressure9am", "Pressure3pm", "Temp9am", "Temp3pm"

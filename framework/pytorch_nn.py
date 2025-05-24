@@ -95,6 +95,20 @@ class PyTorchNN:
 
 
 class SampleClassNN(nn.Module):
+    """
+    A neural network module for constructing a multi-layer perceptron (MLP).
+
+    :ivar activation: The activation function to use. Must be one of 'relu',
+        'sigmoid', or 'tanh'. Stored as a lowercase string.
+    :type activation: str
+    :ivar hidden_layers: A list of linear layers representing the hidden
+        layers of the network.
+    :type hidden_layers: torch.nn.ModuleList
+    :ivar output_layer: A linear layer representing the output layer of
+        the network.
+    :type output_layer: torch.nn.Linear
+    """
+
     def __init__(self, input_size, hidden_layers, output_size, activation='relu'):
         super(SampleClassNN, self).__init__()
         self.activation = activation.lower()
@@ -109,13 +123,15 @@ class SampleClassNN(nn.Module):
 
     def forward(self, x):
         for layer in self.hidden_layers:
+            # Apply the hidden layer
             x = layer(x)
+            # Apply the activation function
             x = self._apply_activation(x)
         return self.output_layer(x)
 
     def _apply_activation(self, x):
         if self.activation == 'relu':
-            return F.relu(x)
+            return torch.relu(x)
         elif self.activation == 'sigmoid':
             return torch.sigmoid(x)
         elif self.activation == 'tanh':
