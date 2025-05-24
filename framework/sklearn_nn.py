@@ -3,13 +3,6 @@ from sklearn.metrics import accuracy_score
 
 class SklearnNN:
     def __init__(self, input_size=None, hidden_layers=(100,), activation='relu', output_size=None, learning_rate=0.001):
-        """
-        Parameters:
-        - input_size, output_size: ignored (for interface consistency only)
-        - hidden_layers: tuple, e.g. (32, 16)
-        - activation: 'identity', 'logistic', 'tanh', or 'relu'
-        - learning_rate: initial learning rate
-        """
         self.model = MLPClassifier(
             hidden_layer_sizes=hidden_layers,
             activation=activation,

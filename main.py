@@ -1,39 +1,36 @@
 import itertools
 import numpy as np
+import pandas as pd
 
+# preprocessing 
 from datasets.preprocessing_review import preprocess_amazon_review_data
 from datasets.preprocessing_weather import preprocess_weather_data
+
+# NN models 
 from framework.my_nn import MyNN
 from framework.LLM_nn import LLM_NN
 from framework.pytorch_nn import PyTorchNN
 from framework.sklearn_nn import SklearnNN
+
+# training and evaluation
 from training.train import train_model
 from training.evaluate import evaluate_model
-from datasets.debug_data import load_debug_data  # Use debug for now
 
-import pandas as pd
+# debug data
+from datasets.debug_data import load_debug_data  
 
-# Load test data
-X_train, X_test, y_train, y_test = preprocess_amazon_review_data()
-# print("y_train shape:", y_train.shape)
-# print("y_train example:", y_train[:5])
-
+# pick debug, amazon review or weather dataset
+X_train, X_test, y_train, y_test = preprocess_weather_data()
 
 input_size=X_train.shape[1]
 output_size = len(np.unique(y_train))
 
-# Define hyperparameter grid
-# param_grid = {
-#     'hidden_layers': [(8,), (32,), (64, 32)],
-#     'learning_rate': [0.001, 0.01]
-# }
-
 param_grid = {
     'hidden_layers': [
-        (16,),        # 1 layer, 8 units
-        (32,),       # 1 layer, 32 units
-        (64, 32),    # 2 layers
-        (64, 32, 16) # 3 layers
+        (16,),        # 1 layer, 8 neurons
+        (32,),       # 1 layer, 32 neurons
+        (64, 32),    # 2 layers - 64 and 32 neurons
+        (64, 32, 16) # 3 layers - ...
     ],
     'learning_rate': [0.001, 0.01],
     'activation': ['relu', 'tanh']
@@ -49,8 +46,6 @@ base_models = {
 results = {}
 best_models = {}
 log = [] 
-
-
 
 for model_name, model_class in base_models.items():
     print(f" Grid Search for {model_name}")
@@ -108,10 +103,11 @@ for model_name, model_class in base_models.items():
     print(f" Best for {model_name}: {best_params}, Accuracy={best_score:.4f}")
     best_models[model_name] = best_model
 
-# Print final results
 print("\n=== Final Results ===")
 for name, result in results.items():
     print(f"{name}: Accuracy={result['accuracy']:.4f}, Params={result['params']}, RAM={result['ram_MB']:.2f} MB")
 df_results = pd.DataFrame(log)
-df_results.to_csv("grid_search_results_reviews_all.csv", index=False)
-print("\nSaved full grid search results to grid_search_results.csv")
+
+# adjust .csv output name 
+df_results.to_csv("grid_search_results_weather_all.csv", index=False)
+print("\nSaved full grid search results to grid_search_results... .csv")

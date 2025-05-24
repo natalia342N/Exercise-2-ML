@@ -1,21 +1,4 @@
-# training/evaluate.py
-
 def evaluate_model(model, X_test, y_test, input_size=None):
-    """
-    Evaluates the model on test data.
-
-    Parameters:
-        model: trained model object
-        X_test: test features
-        y_test: test labels
-        input_size: number of features (used for memory estimate, if required)
-
-    Returns:
-        Dictionary with:
-            - accuracy
-            - number of parameters
-            - estimated RAM usage (in MB)
-    """
     results = {}
     try:
         accuracy = model.score(X_test, y_test)

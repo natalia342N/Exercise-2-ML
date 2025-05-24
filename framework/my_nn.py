@@ -1,8 +1,4 @@
-# From scratch version of a neural network
-
 import numpy as np
-import numpy as np
-
 
 class Layer:
     def __init__(self, input_n, output_n, activationFunction):
@@ -33,6 +29,12 @@ class Layer:
     def softmax(self, x):
         exp_x = np.exp(x - np.max(x, axis=1, keepdims=True))
         return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+    
+    def tanh(self, x):
+        return np.tanh(x)
+
+    def tanh_derivative(self, x):
+        return 1.0 - np.tanh(x)**2
 
     def forwardPropagation(self, input_data):
         self.inputdata = input_data
@@ -44,6 +46,8 @@ class Layer:
             self.output = self.sigmoid(self.z)
         elif self.activation == "softmax":
             self.output = self.softmax(self.z)
+        elif self.activation == "tanh":
+            self.output = self.tanh(self.z)
         else:
             raise ValueError("Unsupported activation function")
 
@@ -56,13 +60,14 @@ class Layer:
             delta = delta_val * self.sigmoid_derivative(self.output)
         elif self.activation == "softmax":
             delta = delta_val
+        elif self.activation == "tanh":
+            delta = delta_val * self.tanh_derivative(self.z)
 
         delta = np.clip(delta, -5, 5)
 
         weight_grad = np.dot(self.inputdata.T, delta)
         bias_grad = np.sum(delta, axis=0, keepdims=True)
 
-        # Apply learning rate
         self.weights -= learningrate * weight_grad
         self.biases -= learningrate * bias_grad
 
@@ -76,30 +81,30 @@ class Layer:
 
 
 class Network:
-    def __init__(self, input_len, output_len):
+    def __init__(self, input_len, output_len, activation='relu'):
         self.layers = []
         self.best_val_loss = float("inf")
         self.best_weights = None
+        self.activation = activation
         self.build_network(input_len, output_len)
 
     def build_network(self, input_len, output_len):
-        # Hidden layers (all ReLU)
         for i in range(len(output_len) - 1):
             self.layers.append(
                 Layer(
                     input_len if i == 0 else output_len[i - 1],
                     output_len[i],
-                    "relu"
+                    self.activation  
                 )
             )
 
         output_size = output_len[-1]
-        activation = "sigm" if output_size == 1 else "softmax"
+        output_activation = "sigm" if output_size == 1 else "softmax"
         self.layers.append(
             Layer(
                 output_len[-2] if len(output_len) > 1 else input_len,
                 output_size,
-                activation
+                output_activation
             )
         )
 
@@ -174,13 +179,13 @@ class Network:
 
 class MyNN:
     def __init__(self, input_size, hidden_layers, output_size, learning_rate=0.01, activation='relu'):
-        self.net = Network(input_size, hidden_layers + (output_size,))
+        self.net = Network(input_size, hidden_layers + (output_size,), activation=activation)
         self.learning_rate = learning_rate
         self.input_size = input_size
         self.output_size = output_size
         self.X_mean = None
         self.X_std = None
-        self.activation=activation
+        self.activation = activation
 
     def fit(self, X, y, epochs=100, batch_size=32, verbose=True):
         self.X_mean = np.mean(X, axis=0)

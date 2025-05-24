@@ -1,5 +1,3 @@
-# training/train.py
-
 def train_model(model, X_train, y_train, **kwargs):
     try:
         model.fit(X_train, y_train, **kwargs)

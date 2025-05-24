@@ -4,62 +4,62 @@ MyNN,"(16,)",0.001,tanh,0.78275
 MyNN,"(16,)",0.01,relu,0.78275
 MyNN,"(16,)",0.01,tanh,0.78275
 MyNN,"(32,)",0.001,relu,0.78275
-MyNN,"(32,)",0.001,tanh,0.78275
+MyNN,"(32,)",0.001,tanh,0.783
 MyNN,"(32,)",0.01,relu,0.78275
-MyNN,"(32,)",0.01,tanh,0.82675
+MyNN,"(32,)",0.01,tanh,0.18125
 MyNN,"(64, 32)",0.001,relu,0.78275
-MyNN,"(64, 32)",0.001,tanh,0.78275
+MyNN,"(64, 32)",0.001,tanh,0.32275
 MyNN,"(64, 32)",0.01,relu,0.78275
-MyNN,"(64, 32)",0.01,tanh,0.78275
+MyNN,"(64, 32)",0.01,tanh,0.80225
 MyNN,"(64, 32, 16)",0.001,relu,0.78275
 MyNN,"(64, 32, 16)",0.001,tanh,0.78275
 MyNN,"(64, 32, 16)",0.01,relu,0.78275
-MyNN,"(64, 32, 16)",0.01,tanh,0.78275
+MyNN,"(64, 32, 16)",0.01,tanh,0.7935
 LLM_NN,"(16,)",0.001,relu,0.78275
-LLM_NN,"(16,)",0.001,tanh,0.78275
+LLM_NN,"(16,)",0.001,tanh,0.7835
 LLM_NN,"(16,)",0.01,relu,0.78275
 LLM_NN,"(16,)",0.01,tanh,0.21725
 LLM_NN,"(32,)",0.001,relu,0.78275
 LLM_NN,"(32,)",0.001,tanh,0.78275
 LLM_NN,"(32,)",0.01,relu,0.21725
-LLM_NN,"(32,)",0.01,tanh,0.785
+LLM_NN,"(32,)",0.01,tanh,0.21725
 LLM_NN,"(64, 32)",0.001,relu,0.78275
-LLM_NN,"(64, 32)",0.001,tanh,0.72225
-LLM_NN,"(64, 32)",0.01,relu,0.21725
-LLM_NN,"(64, 32)",0.01,tanh,0.784
+LLM_NN,"(64, 32)",0.001,tanh,0.78275
+LLM_NN,"(64, 32)",0.01,relu,0.78275
+LLM_NN,"(64, 32)",0.01,tanh,0.2175
 LLM_NN,"(64, 32, 16)",0.001,relu,0.78275
-LLM_NN,"(64, 32, 16)",0.001,tanh,0.22575
+LLM_NN,"(64, 32, 16)",0.001,tanh,0.4355
 LLM_NN,"(64, 32, 16)",0.01,relu,0.21725
-LLM_NN,"(64, 32, 16)",0.01,tanh,0.21725
-PyTorchNN,"(16,)",0.001,relu,0.78275
+LLM_NN,"(64, 32, 16)",0.01,tanh,0.74475
+PyTorchNN,"(16,)",0.001,relu,0.21725
 PyTorchNN,"(16,)",0.001,tanh,0.78275
 PyTorchNN,"(16,)",0.01,relu,0.78275
-PyTorchNN,"(16,)",0.01,tanh,0.784
-PyTorchNN,"(32,)",0.001,relu,0.7885
-PyTorchNN,"(32,)",0.001,tanh,0.21725
-PyTorchNN,"(32,)",0.01,relu,0.21725
+PyTorchNN,"(16,)",0.01,tanh,0.21725
+PyTorchNN,"(32,)",0.001,relu,0.78275
+PyTorchNN,"(32,)",0.001,tanh,0.78275
+PyTorchNN,"(32,)",0.01,relu,0.45775
 PyTorchNN,"(32,)",0.01,tanh,0.21725
 PyTorchNN,"(64, 32)",0.001,relu,0.78275
-PyTorchNN,"(64, 32)",0.001,tanh,0.77925
+PyTorchNN,"(64, 32)",0.001,tanh,0.755
 PyTorchNN,"(64, 32)",0.01,relu,0.78275
-PyTorchNN,"(64, 32)",0.01,tanh,0.41175
-PyTorchNN,"(64, 32, 16)",0.001,relu,0.78275
-PyTorchNN,"(64, 32, 16)",0.001,tanh,0.783
+PyTorchNN,"(64, 32)",0.01,tanh,0.219
+PyTorchNN,"(64, 32, 16)",0.001,relu,0.24125
+PyTorchNN,"(64, 32, 16)",0.001,tanh,0.785
 PyTorchNN,"(64, 32, 16)",0.01,relu,0.78275
-PyTorchNN,"(64, 32, 16)",0.01,tanh,0.78275
+PyTorchNN,"(64, 32, 16)",0.01,tanh,0.77125
 SklearnNN,"(16,)",0.001,relu,0.21725
 SklearnNN,"(16,)",0.001,tanh,0.78275
-SklearnNN,"(16,)",0.01,relu,0.21725
+SklearnNN,"(16,)",0.01,relu,0.78275
 SklearnNN,"(16,)",0.01,tanh,0.78275
 SklearnNN,"(32,)",0.001,relu,0.21725
 SklearnNN,"(32,)",0.001,tanh,0.78275
 SklearnNN,"(32,)",0.01,relu,0.21725
-SklearnNN,"(32,)",0.01,tanh,0.2175
+SklearnNN,"(32,)",0.01,tanh,0.21725
 SklearnNN,"(64, 32)",0.001,relu,0.78275
 SklearnNN,"(64, 32)",0.001,tanh,0.78275
-SklearnNN,"(64, 32)",0.01,relu,0.21725
-SklearnNN,"(64, 32)",0.01,tanh,0.685
+SklearnNN,"(64, 32)",0.01,relu,0.78275
+SklearnNN,"(64, 32)",0.01,tanh,0.21725
 SklearnNN,"(64, 32, 16)",0.001,relu,0.78275
-SklearnNN,"(64, 32, 16)",0.001,tanh,0.78275
+SklearnNN,"(64, 32, 16)",0.001,tanh,0.7495
 SklearnNN,"(64, 32, 16)",0.01,relu,0.78275
 SklearnNN,"(64, 32, 16)",0.01,tanh,0.78275

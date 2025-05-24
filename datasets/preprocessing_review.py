@@ -1,15 +1,9 @@
 import pandas as pd
+
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
 
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-import pandas as pd
-
+# path to training data
 def preprocess_amazon_review_data(path='datasets/review/amazon_review_ID.shuf.lrn.csv'):
 
     data = pd.read_csv(path)
@@ -24,8 +18,6 @@ def preprocess_amazon_review_data(path='datasets/review/amazon_review_ID.shuf.lr
     le = LabelEncoder()
     y_train = le.fit_transform(y_train_raw)
     y_val = le.transform(y_val_raw)
-
-
 
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train_raw)

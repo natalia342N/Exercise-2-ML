@@ -35,7 +35,6 @@ def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Dat
     X_train_combined = pd.concat([X_train_num, X_train_cat], axis=1)
     X_test_combined = pd.concat([X_test_num, X_test_cat], axis=1)
 
-
     imputer = KNNImputer(n_neighbors=3, weights='uniform')
     X_train_imputed = imputer.fit_transform(X_train_combined)
     X_test_imputed = imputer.transform(X_test_combined)
@@ -58,6 +57,8 @@ def preprocess_weather_data(path='datasets/Dataset3_Weather/Weather Training Dat
     return (
         X_train_imputed_df.to_numpy(),
         X_test_imputed_df.to_numpy(),
+        
+        # Convert y_train and y_test to numpy arrays to fit the expected format
         y_train.reset_index(drop=True).to_numpy().reshape(-1),
         y_test.reset_index(drop=True).to_numpy().reshape(-1)
     )

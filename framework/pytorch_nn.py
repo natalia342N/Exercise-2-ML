@@ -80,7 +80,6 @@ class SampleClassNN(nn.Module):
         super(SampleClassNN, self).__init__()
         self.activation = activation.lower()
 
-        # Dynamically build layers
         layers = []
         in_dim = input_size
         for h_dim in hidden_layers:
@@ -93,7 +92,7 @@ class SampleClassNN(nn.Module):
         for layer in self.hidden_layers:
             x = layer(x)
             x = self._apply_activation(x)
-        return self.output_layer(x)  # raw logits
+        return self.output_layer(x)
 
     def _apply_activation(self, x):
         if self.activation == 'relu':
@@ -109,7 +108,6 @@ def count_learnable_params(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 def estimate_virtual_ram_usage(model, input_size, dtype=torch.float32):
-    # Estimate memory usage of weights and one forward pass
     param_mem = sum(p.numel() * torch.tensor([], dtype=dtype).element_size()
                     for p in model.parameters() if p.requires_grad)
 
@@ -119,4 +117,4 @@ def estimate_virtual_ram_usage(model, input_size, dtype=torch.float32):
     activation_mem = batch.numel() * batch.element_size() + output.numel() * output.element_size()
 
     total_bytes = param_mem + activation_mem
-    return total_bytes / (1024 ** 2)  # in MB
+    return total_bytes / (1024 ** 2) 
